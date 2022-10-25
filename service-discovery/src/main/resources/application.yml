@@ -1,0 +1,22 @@
+
+
+server.port: 8761
+
+eureka:
+  server:
+#    a-s-g-update-interval-ms: 1500
+#    a-s-g-cache-expiry-timeout-ms: 1000
+#    a-s-g-query-timeout-ms: 300
+
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: ALWAYS

@@ -1,0 +1,49 @@
+server:
+  port: 8080
+  error:
+    include-message: always
+#    include-exception: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: ALWAYS
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+
+spring:
+  application.name: gateway-service
+  cloud:
+    gateway:
+      set-status:
+        original-status-header-name: original-http-status
+      discovery.locator.enabled: true
+      routes:
+        - id: user-service-id
+          uri: lb://user-service
+          predicates:
+            Path=/user/**
+        - id: auth-service-id
+          uri: lb://auth-service
+          predicates:
+            Path=/auth/**
+        - id: article-service-id
+          uri: lb://article-service
+          predicates:
+            Path=/article/**
+
+
+
+eureka:
+  client:
+#    registry-fetch-interval-seconds: 1
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVER:http://localhost:8761/eureka}
+
+
+
