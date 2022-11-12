@@ -1,0 +1,65 @@
+version: "3.8"
+services:
+
+  couchbase-server:
+    image: couchbase/server
+    volumes:
+        - ~/couchbase/node1:/opt/couchbase/var
+    ports:
+      - "8091-8096:8091-8096"
+      - "11210:11210"
+    environment:
+      - CLUSTER_NAME=medium
+      - COUCHBASE_ADMINISTRATOR_USERNAME=Administrator
+      - COUCHBASE_ADMINISTRATOR_PASSWORD=666666
+      - COUCHBASE_BUCKET=medium
+      - COUCHBASE_BUCKET_RAMSIZE=512
+      - COUCHBASE_RBAC_USERNAME=admin
+      - COUCHBASE_RBAC_PASSWORD=666666
+      - COUCHBASE_RBAC_NAME=admin
+      - COUCHBASE_RAM_SIZE=2048
+      - COUCHBASE_INDEX_RAM_SIZE=512
+  service-discovery:
+    image: micro-medium-service-discovery
+    restart: always
+    ports:
+      - "8761:8761"
+  gateway-service:
+    image: micro-medium-gateway
+    restart: always
+    environment:
+      - EUREKA_SERVER=http://service-discovery:8761/eureka
+    depends_on:
+      - service-discovery
+    links:
+      - "service-discovery"
+    ports:
+      - "8080:8080"
+  article-service:
+    image: micro-medium-article
+    restart: always
+    environment:
+      - EUREKA_SERVER=http://service-discovery:8761/eureka
+      - COUCHBASE_SERVER=couchbase-server
+    depends_on:
+      - service-discovery
+      - gateway-service
+      - couchbase-server
+    links:
+      - "service-discovery"
+      - "user-service"
+  user-service:
+    image: micro-medium-user
+    restart: always
+    environment:
+      - EUREKA_SERVER=http://service-discovery:8761/eureka
+      - COUCHBASE_SERVER=couchbase-server
+    depends_on:
+      - service-discovery
+      - gateway-service
+      - couchbase-server
+    links:
+      - "service-discovery"
+
+
+

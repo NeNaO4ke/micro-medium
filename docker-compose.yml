@@ -1,65 +1,32 @@
-version: "3.8"
+version: "2"
+
 services:
-
-  couchbase-server:
-    image: couchbase/server
+  zookeeper:
+    image: docker.io/bitnami/zookeeper:3.8
+    ports:
+      - "2181:2181"
     volumes:
-        - ~/couchbase/node1:/opt/couchbase/var
+      - "zookeeper_data:/bitnami"
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+  kafka:
+    image: docker.io/bitnami/kafka:3.3
     ports:
-      - "8091-8096:8091-8096"
-      - "11210:11210"
+      - "9092:9092"
+    volumes:
+      - "kafka_data:/bitnami"
     environment:
-      - CLUSTER_NAME=medium
-      - COUCHBASE_ADMINISTRATOR_USERNAME=Administrator
-      - COUCHBASE_ADMINISTRATOR_PASSWORD=666666
-      - COUCHBASE_BUCKET=medium
-      - COUCHBASE_BUCKET_RAMSIZE=512
-      - COUCHBASE_RBAC_USERNAME=admin
-      - COUCHBASE_RBAC_PASSWORD=666666
-      - COUCHBASE_RBAC_NAME=admin
-      - COUCHBASE_RAM_SIZE=2048
-      - COUCHBASE_INDEX_RAM_SIZE=512
-  service-discovery:
-    image: micro-medium-service-discovery
-    restart: always
-    ports:
-      - "8761:8761"
-  gateway-service:
-    image: micro-medium-gateway
-    restart: always
-    environment:
-      - EUREKA_SERVER=http://service-discovery:8761/eureka
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CLIENT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      - KAFKA_CFG_LISTENERS=CLIENT://:9092,EXTERNAL://:9093
+      - KAFKA_CFG_ADVERTISED_LISTENERS=CLIENT://localhost:9092,EXTERNAL://localhost:9093
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=CLIENT
     depends_on:
-      - service-discovery
-    links:
-      - "service-discovery"
-    ports:
-      - "8080:8080"
-  article-service:
-    image: micro-medium-article
-    restart: always
-    environment:
-      - EUREKA_SERVER=http://service-discovery:8761/eureka
-      - COUCHBASE_SERVER=couchbase-server
-    depends_on:
-      - service-discovery
-      - gateway-service
-      - couchbase-server
-    links:
-      - "service-discovery"
-      - "user-service"
-  user-service:
-    image: micro-medium-user
-    restart: always
-    environment:
-      - EUREKA_SERVER=http://service-discovery:8761/eureka
-      - COUCHBASE_SERVER=couchbase-server
-    depends_on:
-      - service-discovery
-      - gateway-service
-      - couchbase-server
-    links:
-      - "service-discovery"
+      - zookeeper
 
-
-
+volumes:
+  zookeeper_data:
+    driver: local
+  kafka_data:
+    driver: local

@@ -22,13 +22,6 @@ public class ArticleUpvote {
     @GeneratedValue(strategy = GenerationStrategy.USE_ATTRIBUTES)
     @QueryIndexed
     private String id;
-
-    @Field
-    private String articleId;
-
-    @Field
-    private String userId;
-
     @Field
     private Date upvotedAt;
 }
