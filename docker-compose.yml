@@ -1,5 +1,4 @@
 version: "2"
-
 services:
   zookeeper:
     image: docker.io/bitnami/zookeeper:3.8
@@ -24,6 +23,7 @@ services:
       - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=CLIENT
     depends_on:
       - zookeeper
+
 
 volumes:
   zookeeper_data:

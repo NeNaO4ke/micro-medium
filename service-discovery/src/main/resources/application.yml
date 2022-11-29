@@ -20,3 +20,11 @@ management:
   endpoint:
     health:
       show-details: ALWAYS
+spring:
+  boot:
+    admin:
+      context-path: /admin
+  application:
+    name: eureka-server
+  main:
+    banner-mode: off

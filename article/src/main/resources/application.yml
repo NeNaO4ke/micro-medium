@@ -2,7 +2,6 @@ server:
   port: 8081
   servlet:
     context-path: /article
-
 spring:
   application.name: article-service
   couchbase:
@@ -27,6 +26,12 @@ spring:
           configuration:
             key.serializer: org.apache.kafka.common.serialization.StringSerializer
             value.serializer: org.apache.kafka.common.serialization.StringSerializer
+  boot:
+    admin:
+      client:
+        url: ${ADMIN_SERVER:http://localhost:8761/admin}
+  main:
+    banner-mode: off
 eureka:
   client:
     registry-fetch-interval-seconds: 5
@@ -35,6 +40,10 @@ eureka:
   instance:
     instanceId: ${spring.cloud.client.hostname}:${spring.application.name}:${spring.application.instance_id:${random.value}}
 
+sentry:
+  dsn: ${SENTRY_DSN}
+  in-app-includes: org.medium.user
+  send-default-pii: on
 
 management:
   endpoints:

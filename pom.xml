@@ -26,6 +26,7 @@
         <module>gateway</module>
         <module>article</module>
         <module>user</module>
+        <module>event</module>
     </modules>
 
 </project>

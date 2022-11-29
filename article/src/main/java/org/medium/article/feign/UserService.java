@@ -1,5 +1,6 @@
 package org.medium.article.feign;
 
+import io.micrometer.core.annotation.Counted;
 import org.medium.article.domain.UserDTO;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,9 +17,11 @@ import java.util.List;
 @ReactiveFeignClient(name = "user-service")
 public interface UserService {
 
+    @Counted(value = "count.getUserById", description = "Number of times getUserById method was called")
     @GetMapping("/user/{id}")
-    public Mono<UserDTO> getUserByID(@PathVariable String id);
+    Mono<UserDTO> getUserByID(@PathVariable String id);
 
+    @Counted(value = "count.getUsersById", description = "Number of times getUsersByIdMethod was called")
     @PostMapping(value = "/user/ids")
-    public Flux<UserDTO> getUsersByIds(@RequestBody List<String> ids);
+    Flux<UserDTO> getUsersByIds(@RequestBody List<String> ids);
 }

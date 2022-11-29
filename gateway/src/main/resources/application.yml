@@ -15,7 +15,6 @@ management:
 logging:
   level:
     org.springframework.cloud.gateway: DEBUG
-
 spring:
   application.name: gateway-service
   cloud:
@@ -36,6 +35,12 @@ spring:
           uri: lb://article-service
           predicates:
             Path=/article/**
+  boot:
+    admin:
+      client:
+        url: ${ADMIN_SERVER:http://localhost:8761/admin}
+  main:
+    banner-mode: off
 
 
 

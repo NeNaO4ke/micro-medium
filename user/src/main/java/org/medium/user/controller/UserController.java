@@ -1,5 +1,7 @@
 package org.medium.user.controller;
 
+import io.micrometer.core.annotation.Timed;
+import io.sentry.Sentry;
 import lombok.RequiredArgsConstructor;
 import org.apache.http.entity.ContentType;
 import org.medium.user.domain.User;
@@ -23,11 +25,13 @@ public class UserController {
 
     private final UserService userService;
 
+    @Timed(value = "time.getting.user.by.id")
     @GetMapping("/{id}")
     public Mono<User> getUserByID(@PathVariable String id) {
         return userService.findUserById(id);
     }
 
+    @Timed(value = "time.create.user")
     @PostMapping(value = "/")
     public Mono<User> createUser(@RequestBody User user) {
         return userService.saveUser(user);
