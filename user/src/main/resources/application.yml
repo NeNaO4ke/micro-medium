@@ -2,7 +2,6 @@ server:
   port: 0
   servlet:
     context-path: /user
-
 spring:
   application.name: user-service
   couchbase:
@@ -11,6 +10,12 @@ spring:
     bucket-name: medium
     host: ${COUCHBASE_SERVER:127.0.0.1}
     port: 8091
+  main:
+    banner-mode: off
+  boot:
+    admin:
+      client:
+        url: ${ADMIN_SERVER:http://localhost:8761/admin}
 
 eureka:
   client:
@@ -20,7 +25,10 @@ eureka:
   instance:
     instanceId: ${spring.cloud.client.hostname}:${spring.application.name}:${spring.application.instance_id:${random.value}}
 
-
+sentry:
+  dsn: ${SENTRY_DSN}
+  in-app-includes: org.medium.user
+  send-default-pii: on
 management:
   endpoints:
     web:

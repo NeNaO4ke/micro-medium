@@ -1,5 +1,6 @@
 package org.medium.article.controller;
 
+import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import org.medium.article.domain.Article;
 import org.medium.article.domain.ArticlesWithUser;
@@ -22,6 +23,7 @@ public class ArticleController {
 
     private final ArticleService articleService;
 
+    @Timed(value = "time.getting.article.by.id")
     @GetMapping("/{id}")
     public Mono<Article> getArticleByID(@PathVariable String id) {
         return articleService.getArticleById(id);

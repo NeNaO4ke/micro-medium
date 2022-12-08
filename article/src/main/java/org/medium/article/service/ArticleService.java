@@ -2,6 +2,7 @@ package org.medium.article.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.sentry.Sentry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.medium.article.domain.Article;
@@ -12,18 +13,17 @@ import org.medium.article.feign.UserService;
 import org.medium.article.repository.ArticleRepository;
 import org.medium.article.repository.ArticleUpvoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jms.config.JmsListenerContainerFactory;
 import org.springframework.jms.core.JmsTemplate;
-import org.springframework.jms.support.destination.JmsDestinationAccessor;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
 
-import javax.jms.Destination;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -59,6 +59,9 @@ public class ArticleService {
     }
 
     public Mono<Article> getArticleById(String id) {
+        Sentry.setTransaction("Getting article by id");
+        Sentry.setTag("article_service", "get_article_by_id");
+        Sentry.captureMessage("Getting article with id " + id);
         return articleRepository.findById(id);
     }
 
@@ -109,5 +112,10 @@ public class ArticleService {
                 .collectList();
         Flux<UserDTO> usersByIds = listIds.flatMapMany(lst -> userService.getUsersByIds(lst));
         return Mono.zip(pageArticles.collectList(), usersByIds.collectList(), ArticlesWithUser::new);
+    }
+
+    @Scheduled(fixedRate = 10000)
+    public void scheduledTask() {
+        userService.getUserByID(UUID.randomUUID().toString());
     }
 }
