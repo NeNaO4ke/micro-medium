@@ -1,16 +1,14 @@
 package org.medium.article.controller;
 
+import com.google.protobuf.AbstractMessage;
 import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import org.medium.article.domain.Article;
 import org.medium.article.domain.ArticlesWithUser;
 import org.medium.article.service.ArticleService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -48,6 +46,12 @@ public class ArticleController {
                                                           @RequestParam(defaultValue = "10") long limit,
                                                           @RequestParam(defaultValue = "0") long offset) {
         return articleService.getArticlesWithUser(orderBy, limit, offset);
+    }
+
+    @GetMapping("/user/proto/{id}")
+    public Mono<String> getUserByIdProto(@PathVariable String id) {
+        return articleService.getUserByIdProto(id)
+                .map(AbstractMessage::toString);
     }
 
     @PostMapping(value = "/")
