@@ -1,0 +1,17 @@
+syntax = "proto3";
+package org.medium.grpcserver;
+
+message imageRequest {
+  string username = 1;
+  string firstName = 2;
+  string lastName = 3;
+}
+
+message imageResponse {
+  string avatarUrl = 1;
+}
+
+service ImageService {
+  rpc image(imageRequest) returns (imageResponse);
+}
+

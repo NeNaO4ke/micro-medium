@@ -1,17 +1,14 @@
 package org.medium.user.controller;
 
 import io.micrometer.core.annotation.Timed;
-import io.sentry.Sentry;
 import lombok.RequiredArgsConstructor;
-import org.apache.http.entity.ContentType;
+import org.medium.proto.UserProto;
 import org.medium.user.domain.User;
+import org.medium.user.service.GrpcService;
 import org.medium.user.service.UserService;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import org.medium.user.async.AsyncConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +21,7 @@ import java.util.concurrent.ExecutionException;
 public class UserController {
 
     private final UserService userService;
+    private final GrpcService grpcService;
 
     @Timed(value = "time.getting.user.by.id")
     @GetMapping("/{id}")
@@ -35,6 +33,11 @@ public class UserController {
     @PostMapping(value = "/")
     public Mono<User> createUser(@RequestBody User user) {
         return userService.saveUser(user);
+    }
+
+    @GetMapping(value = "/proto/{id}", produces = "application/x-protobuf")
+    public Mono<UserProto.User> getUserByIDProto(@PathVariable String id) {
+        return userService.findUserByIdProto(id);
     }
 
     @PostMapping(value = "/ids")
@@ -53,6 +56,11 @@ public class UserController {
             users.add((User) arrayFutures[i].get());
         }
         return users;
+    }
+
+    @GetMapping("/avatar")
+    public Mono<String> getRandomAvatarUrl(@RequestParam String username, @RequestParam String firstname, @RequestParam String lastname) {
+        return Mono.just(grpcService.getAvatarUrl(username, firstname, lastname));
     }
 
 

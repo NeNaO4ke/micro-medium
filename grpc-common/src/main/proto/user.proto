@@ -1,0 +1,12 @@
+syntax = "proto2";
+package org.medium.proto;
+
+option java_outer_classname = "UserProto";
+
+message User {
+  required string id = 1;
+  required string username = 2;
+  optional string firstName = 3;
+  optional string lastName = 4;
+  optional string avatarUrl = 5;
+}
