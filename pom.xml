@@ -27,6 +27,7 @@
         <module>article</module>
         <module>user</module>
         <module>event</module>
+        <module>authservice</module>
     </modules>
 
 </project>
