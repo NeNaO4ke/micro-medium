@@ -12,6 +12,7 @@ import org.medium.article.domain.UserDTO;
 import org.medium.article.feign.UserService;
 import org.medium.article.repository.ArticleRepository;
 import org.medium.article.repository.ArticleUpvoteRepository;
+import org.medium.proto.UserProto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -112,6 +113,10 @@ public class ArticleService {
                 .collectList();
         Flux<UserDTO> usersByIds = listIds.flatMapMany(lst -> userService.getUsersByIds(lst));
         return Mono.zip(pageArticles.collectList(), usersByIds.collectList(), ArticlesWithUser::new);
+    }
+
+    public Mono<UserProto.User> getUserByIdProto(String id) {
+        return userService.getUserByIDProto(id);
     }
 
     @Scheduled(fixedRate = 10000)

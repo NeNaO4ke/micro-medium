@@ -17,6 +17,9 @@
     </parent>
 
     <properties>
+        <guava.version>31.1-android</guava.version>
+        <protobuf.version>3.9.0</protobuf.version>
+        <grpc.version>1.51.0</grpc.version>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
@@ -26,8 +29,19 @@
         <module>gateway</module>
         <module>article</module>
         <module>user</module>
-        <module>event</module>
-        <module>authservice</module>
+        <module>event</module>   
+        <module>grpc-server</module>
+        <module>grpc-common</module>
     </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
 </project>
