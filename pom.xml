@@ -29,7 +29,7 @@
         <module>gateway</module>
         <module>article</module>
         <module>user</module>
-        <module>event</module>
+        <module>event</module>   
         <module>grpc-server</module>
         <module>grpc-common</module>
     </modules>
