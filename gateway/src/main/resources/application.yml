@@ -26,7 +26,9 @@ spring:
         - id: user-service-id
           uri: lb://user-service
           predicates:
-            Path=/user/**
+            Path=/api/user/**
+          filters:
+            - AuthFilter
         - id: auth-service-id
           uri: lb://auth-service
           predicates:
@@ -34,11 +36,9 @@ spring:
         - id: article-service-id
           uri: lb://article-service
           predicates:
-            Path=/article/**
-  boot:
-    admin:
-      client:
-        url: ${ADMIN_SERVER:http://localhost:8761/admin}
+            Path=/api/article/**
+          filters:
+            - AuthFilter
   main:
     banner-mode: off
 

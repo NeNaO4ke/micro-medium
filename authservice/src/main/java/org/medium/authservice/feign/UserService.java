@@ -9,7 +9,7 @@ import reactor.core.publisher.Mono;
 @ReactiveFeignClient(name = "user-service")
 public interface UserService {
 
-    @GetMapping(value = "/user/{id}")
+    @GetMapping(value = "/api/user/{id}")
     Mono<UserDTO> getUserById(@PathVariable String id);
 
     @GetMapping(value = "/user/username/{username}")

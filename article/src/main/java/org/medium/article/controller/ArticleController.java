@@ -54,6 +54,11 @@ public class ArticleController {
                 .map(AbstractMessage::toString);
     }
 
+    @PostMapping(value = "/upvote/{articleId}")
+    public Mono<?> upvote(@PathVariable String articleId, @RequestHeader(value = "X-auth-user-id") String userId) {
+        return articleService.upvote(userId, articleId);
+    }
+
     @PostMapping(value = "/")
     public Mono<Article> createArticle(@RequestBody Article article) {
         return articleService.createArticle(article);

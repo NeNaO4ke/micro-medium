@@ -3,7 +3,6 @@ package org.medium.authservice.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.medium.authservice.domain.CredentialsDTO;
 import org.medium.authservice.domain.UserDTO;
 import org.medium.authservice.exception.AppException;
 import org.medium.authservice.service.AuthService;
@@ -25,9 +24,9 @@ public class AuthController {
         return Mono.just("Hello world");
     }
 
-    @PostMapping("/login")
-    public Mono<ResponseEntity<?>> login(@RequestBody CredentialsDTO credentialsDTO) {
-        return authService.signIn(credentialsDTO);
+    @PostMapping("/login/{id}")
+    public Mono<ResponseEntity<UserDTO>> login(@PathVariable String id) {
+        return authService.signIn(id);
     }
 
     @GetMapping("/validateToken")

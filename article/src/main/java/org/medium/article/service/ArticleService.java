@@ -84,10 +84,10 @@ public class ArticleService {
                                     Article article = objects.getT2();
                                     long upvotes = article.getUpvotes();
                                     article.setUpvotes(++upvotes);
-                                    jmsTemplate.convertAndSend("articleUpvote", objects.getT1(), message -> {
+                            /*        jmsTemplate.convertAndSend("articleUpvote", objects.getT1(), message -> {
                                         message.setStringProperty("toUserId", article.getAuthorId());
                                         return message;
-                                    });
+                                    });*/
 
                                     return articleRepository.save(article);
                                 });
@@ -101,7 +101,6 @@ public class ArticleService {
 
     public Flux<Article> getPageArticle(String orderBy, long limit, long offset) {
         return Mono.defer(() -> {
-            jmsTemplate.convertAndSend("test", "Hello it`s me, Mario!");
             return Mono.empty();
         }).thenMany(articleRepository.listArticle(orderBy, limit, offset));
     }
